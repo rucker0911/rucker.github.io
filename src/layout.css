@@ -195,11 +195,12 @@
   padding: 0 1rem 1rem;
   margin-bottom: 0.75rem;
   border-bottom: 1px solid var(--hud-cyan-dim, rgba(172, 214, 255, 0.3));
-  font-size: 1.1rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--hud-cyan, #00e0ff);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.15em;
   text-shadow: 0 0 20px rgba(0, 224, 255, 0.4);
+  font-family: var(--hud-font-pixel, system-ui, -apple-system, 'Segoe UI', sans-serif);
 }
 
 .blog-layout__nav {
@@ -220,10 +221,11 @@
   margin: 0 0.5rem;
   color: var(--hud-text-dim, #8a9ca8);
   text-decoration: none;
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
   border-left: 3px solid transparent;
   transition: color 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  font-family: var(--hud-font-pixel, system-ui, -apple-system, 'Segoe UI', sans-serif);
 }
 
 .blog-layout__nav-icon {

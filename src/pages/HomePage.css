@@ -16,10 +16,11 @@
 
 .home__welcome-title {
   color: var(--hud-cyan, #00e0ff);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   margin-bottom: 0.5rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-shadow: 0 0 24px rgba(0, 224, 255, 0.4);
+  font-family: var(--hud-font-pixel, system-ui, -apple-system, 'Segoe UI', sans-serif);
 }
 
 .home__welcome-desc {
@@ -120,15 +121,16 @@
 }
 
 .home__tab {
-  padding: 0.4rem 0.75rem;
+  padding: 0.35rem 0.7rem;
   background: transparent;
   border: 1px solid var(--hud-cyan-dim, rgba(0, 224, 255, 0.4));
   border-radius: 4px;
   color: var(--hud-text-dim, #8a9ca8);
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
   cursor: pointer;
   transition: color 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  font-family: var(--hud-font-pixel, system-ui, -apple-system, 'Segoe UI', sans-serif);
 }
 
 .home__tab:hover {
@@ -192,6 +194,7 @@
   color: var(--hud-text-dim, #8a9ca8);
   cursor: pointer;
   transition: color 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  font-family: var(--hud-font-pixel, system-ui, -apple-system, 'Segoe UI', sans-serif);
 }
 
 .home__view-icon {
@@ -339,16 +342,24 @@
 
 .home__section-title {
   color: var(--hud-cyan, #00e0ff);
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   margin-bottom: 0.5rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.14em;
   text-shadow: 0 0 14px rgba(0, 224, 255, 0.3);
+  font-family: var(--hud-font-pixel, system-ui, -apple-system, 'Segoe UI', sans-serif);
 }
 
 .home__section-desc {
   color: var(--hud-text-dim, #8a9ca8);
   font-size: 0.9rem;
   line-height: 1.5;
+}
+
+/* 像素風：右側最近文章標題 */
+.recent-posts__title {
+  font-family: var(--hud-font-pixel, system-ui, -apple-system, 'Segoe UI', sans-serif);
+  letter-spacing: 0.14em;
+  font-size: 0.75rem;
 }
 
 .home__contact-link {
