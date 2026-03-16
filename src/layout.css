@@ -1,0 +1,211 @@
+/* 三欄版面：左窄 + 中寬 + 右窄，RWD 手機收合側欄 */
+
+.blog-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr 260px;
+  grid-template-rows: 1fr;
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: #e0e0e0;
+}
+
+.blog-layout__left {
+  display: flex;
+  flex-direction: column;
+  background: rgba(20, 20, 25, 0.95);
+  border-right: 1px solid rgba(172, 214, 255, 0.2);
+  padding: 1.25rem 0;
+  overflow-y: auto;
+}
+
+.blog-layout__main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 1.25rem 1.5rem;
+}
+
+.blog-layout__right {
+  display: flex;
+  flex-direction: column;
+  background: rgba(20, 20, 25, 0.95);
+  border-left: 1px solid rgba(172, 214, 255, 0.2);
+  padding: 1.25rem;
+  overflow-y: auto;
+}
+
+/* 左側：站名 + 導航 */
+.blog-layout__brand {
+  padding: 0 1rem 1rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(172, 214, 255, 0.15);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ACD6FF;
+  letter-spacing: 0.05em;
+}
+
+.blog-layout__nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.blog-layout__nav-item {
+  margin: 0;
+}
+
+.blog-layout__nav-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #b0b0b0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s, background 0.2s;
+}
+
+.blog-layout__nav-link:hover {
+  color: #ACD6FF;
+  background: rgba(172, 214, 255, 0.08);
+}
+
+.blog-layout__nav-link--active {
+  color: #ACD6FF;
+  background: rgba(172, 214, 255, 0.12);
+  border-left: 3px solid #ACD6FF;
+}
+
+/* 主內容區佔位 */
+.blog-layout__main-inner {
+  max-width: 48rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* 右側區塊標題 */
+.blog-layout__aside-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ACD6FF;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* 手機：主內容全寬，側欄收合為抽屜 */
+@media (max-width: 1024px) {
+  .blog-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .blog-layout__left,
+  .blog-layout__right {
+    position: fixed;
+    top: 0;
+    width: 280px;
+    max-width: 85vw;
+    height: 100vh;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: none;
+  }
+
+  .blog-layout__left.is-open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+  }
+
+  .blog-layout__right {
+    left: auto;
+    right: 0;
+    transform: translateX(100%);
+    border-left: 1px solid rgba(172, 214, 255, 0.2);
+    border-right: none;
+  }
+
+  .blog-layout__right.is-open {
+    transform: translateX(0);
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.5);
+  }
+
+  .blog-layout__main {
+    padding: 0.75rem 1rem;
+    padding-top: 3.5rem;
+  }
+}
+
+/* 手機：選單 / 關閉按鈕列 */
+.blog-layout__mobile-bar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3rem;
+  background: rgba(15, 15, 20, 0.98);
+  border-bottom: 1px solid rgba(172, 214, 255, 0.2);
+  z-index: 999;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+
+@media (max-width: 1024px) {
+  .blog-layout__mobile-bar {
+    display: flex;
+  }
+}
+
+.blog-layout__mobile-bar-brand {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ACD6FF;
+}
+
+.blog-layout__mobile-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.blog-layout__mobile-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  background: transparent;
+  border: 1px solid rgba(172, 214, 255, 0.4);
+  color: #ACD6FF;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.blog-layout__mobile-btn:hover {
+  background: rgba(172, 214, 255, 0.15);
+}
+
+.blog-layout__overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.blog-layout__overlay.is-visible {
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  .blog-layout__left .blog-layout__brand,
+  .blog-layout__right .blog-layout__aside-title {
+    padding-top: 0.5rem;
+  }
+}

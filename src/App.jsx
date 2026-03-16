@@ -1,74 +1,96 @@
 import { useState } from 'react'
 import './App.css'
 import './reference-style.css'
-// import CyberpunkDemo from './CyberpunkDemo.jsx'
-
-const GRID_SPAN_COUNT = 400
+import './layout.css'
 
 function App() {
-  const [showCyberDemo, setShowCyberDemo] = useState(false)
+  const [leftOpen, setLeftOpen] = useState(false)
+  const [rightOpen, setRightOpen] = useState(false)
 
-  if (showCyberDemo) {
-    return (
-      <>
-        <CyberpunkDemo />
-        <div style={{ position: 'fixed', bottom: 16, right: 16 }}>
-          <button
-            type="button"
-            onClick={() => setShowCyberDemo(false)}
-            style={{
-              padding: '0.5rem 1rem',
-              background: 'rgba(0,255,200,0.2)',
-              border: '1px solid #00ffc8',
-              color: '#00ffc8',
-              cursor: 'pointer',
-              borderRadius: 4
-            }}
-          >
-            回首頁
-          </button>
-        </div>
-      </>
-    )
+  const closeOverlay = () => {
+    setLeftOpen(false)
+    setRightOpen(false)
   }
 
   return (
-    <div className="ref-page">
-      <section className="ref-section">
-        {Array.from({ length: GRID_SPAN_COUNT }, (_, i) => (
-          <span key={i} className="ref-grid-span" />
-        ))}
-        <div className="ref-card">
-          <div className="ref-content">
-            <h1>Rucker.github.io</h1>
-            <p className="tagline">用 React + Vite 建置的個人網站</p>
-
-            <div className="ref-block">
-              <h2>歡迎</h2>
-              <p>這是你的 GitHub Pages 網站，由 Vite 建置、部署到 GitHub Pages。</p>
-              <p style={{ marginTop: '0.75rem' }}>
-              </p>
-            </div>
-
-            <div className="ref-block">
-              <h2>About Me</h2>
-              <p>我是 Rucker，一名軟體工程師，主要使用 Python 和 React 進行開發。</p>
-            </div>
-
-            <div className="ref-block">
-              <h2>Projects</h2>
-              <p>我目前正在開發的專案</p>
-            </div>
-
-            <div className="ref-block">
-              <h2>Contact</h2>
-              <p>你可以透過以下方式聯繫我</p>
-            </div>
-
-            <p className="ref-footer">© {new Date().getFullYear()} rucker.github.io</p>
-          </div>
+    <div className="blog-layout">
+      {/* 手機頂列：品牌 + 開關側欄按鈕 */}
+      <header className="blog-layout__mobile-bar">
+        <span className="blog-layout__mobile-bar-brand">Rucker</span>
+        <div className="blog-layout__mobile-bar-actions">
+          <button
+            type="button"
+            className="blog-layout__mobile-btn"
+            onClick={() => setLeftOpen(true)}
+            aria-label="開啟導航"
+          >
+            ☰
+          </button>
+          <button
+            type="button"
+            className="blog-layout__mobile-btn"
+            onClick={() => setRightOpen(true)}
+            aria-label="開啟側欄"
+          >
+            ⋮
+          </button>
         </div>
-      </section>
+      </header>
+
+      {/* 點擊遮罩關閉側欄 */}
+      <div
+        className={`blog-layout__overlay ${leftOpen || rightOpen ? 'is-visible' : ''}`}
+        onClick={closeOverlay}
+        onKeyDown={(e) => e.key === 'Escape' && closeOverlay()}
+        role="button"
+        tabIndex={0}
+        aria-label="關閉選單"
+      />
+
+      {/* 左側：導航 */}
+      <aside className={`blog-layout__left ${leftOpen ? 'is-open' : ''}`}>
+        <div className="blog-layout__brand">Rucker</div>
+        <nav>
+          <ul className="blog-layout__nav">
+            <li className="blog-layout__nav-item">
+              <a href="#home" className="blog-layout__nav-link blog-layout__nav-link--active">首頁</a>
+            </li>
+            <li className="blog-layout__nav-item">
+              <a href="#posts" className="blog-layout__nav-link">文章</a>
+            </li>
+            <li className="blog-layout__nav-item">
+              <a href="#projects" className="blog-layout__nav-link">專案</a>
+            </li>
+            <li className="blog-layout__nav-item">
+              <a href="#about" className="blog-layout__nav-link">關於</a>
+            </li>
+            <li className="blog-layout__nav-item">
+              <a href="#contact" className="blog-layout__nav-link">聯絡</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      {/* 主內容 */}
+      <main className="blog-layout__main">
+        <div className="blog-layout__main-inner">
+          <h1 style={{ color: '#ACD6FF', marginBottom: '0.5rem', fontSize: '1.5rem' }}>Hi, 我是 Rucker</h1>
+          <p style={{ color: '#aaa', marginBottom: '1.5rem', fontSize: '0.95rem' }}>
+            用 React + Vite 建置的個人網站，三欄版面（左窄 + 中寬 + 右窄），手機可收合側欄。
+          </p>
+          <p style={{ color: '#888', fontSize: '0.9rem' }}>
+            主內容區：之後可放文章列表、搜尋、分頁等。
+          </p>
+        </div>
+      </main>
+
+      {/* 右側：最近文章 / 關於我 等 */}
+      <aside className={`blog-layout__right ${rightOpen ? 'is-open' : ''}`}>
+        <h2 className="blog-layout__aside-title">最近文章</h2>
+        <p style={{ color: '#888', fontSize: '0.85rem' }}>（尚未有貼文）</p>
+        <h2 className="blog-layout__aside-title" style={{ marginTop: '1.25rem' }}>關於</h2>
+        <p style={{ color: '#aaa', fontSize: '0.9rem' }}>軟體工程師，Python / React。</p>
+      </aside>
     </div>
   )
 }
