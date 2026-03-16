@@ -18,3 +18,21 @@ body {
   background-color: var(--hud-bg);
   color: var(--hud-text);
 }
+
+/* 掃描線：水平移動的一條亮線 */
+@keyframes hud-scan {
+  0% { transform: translateX(-100%); opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0.5; }
+}
+
+/* 呼吸燈：發光強度緩慢起伏 */
+@keyframes hud-breathe {
+  0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 4px rgba(0, 224, 255, 0.4)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 10px rgba(0, 224, 255, 0.7)); }
+}
+
+@keyframes hud-breathe-glow {
+  0%, 100% { box-shadow: 0 0 14px rgba(0, 224, 255, 0.2), 0 0 24px rgba(0, 224, 255, 0.06); }
+  50% { box-shadow: 0 0 22px rgba(0, 224, 255, 0.35), 0 0 36px rgba(0, 224, 255, 0.12); }
+}

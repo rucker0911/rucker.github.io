@@ -42,6 +42,27 @@
   max-width: 20rem;
   width: 100%;
   margin-bottom: 0.75rem;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.home__search-wrap::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, var(--hud-cyan, #00e0ff), transparent);
+  box-shadow: 0 0 10px var(--hud-cyan, #00e0ff);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.home__search-wrap:focus-within::after {
+  opacity: 1;
+  animation: hud-scan 2.8s ease-in-out infinite;
 }
 
 .home__search-icon {
@@ -81,7 +102,7 @@
 .home__search:focus {
   outline: none;
   border-color: var(--hud-cyan, #00e0ff);
-  box-shadow: var(--hud-glow, 0 0 12px rgba(0, 224, 255, 0.15), 0 0 24px rgba(0, 224, 255, 0.08));
+  animation: hud-breathe-glow 2.8s ease-in-out infinite;
 }
 
 .home__toolbar-row {
@@ -121,6 +142,12 @@
   color: var(--hud-cyan, #00e0ff);
   border-color: var(--hud-cyan, #00e0ff);
   box-shadow: 0 0 14px rgba(0, 224, 255, 0.2), inset 0 0 12px rgba(0, 224, 255, 0.05);
+  animation: hud-breathe-tab 2.5s ease-in-out infinite;
+}
+
+@keyframes hud-breathe-tab {
+  0%, 100% { box-shadow: 0 0 14px rgba(0, 224, 255, 0.2), inset 0 0 12px rgba(0, 224, 255, 0.05); }
+  50% { box-shadow: 0 0 22px rgba(0, 224, 255, 0.35), inset 0 0 14px rgba(0, 224, 255, 0.08); }
 }
 
 .home__filters {
