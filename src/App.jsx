@@ -1,28 +1,115 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import './App.css'
 import './reference-style.css'
 import './layout.css'
 import HomePage from './pages/HomePage'
 import PostPage from './pages/PostPage'
+import PostsPage from './pages/PostsPage'
+import ProjectsPage from './pages/ProjectsPage'
+import AboutPage from './pages/AboutPage'
+import ContactPage from './pages/ContactPage'
 import RecentPosts from './components/RecentPosts'
 import AboutCard from './components/AboutCard'
+
+const STORAGE_KEY = 'blog-sidebar-prefs'
+const MIN_SIDEBAR = 160
+const MAX_SIDEBAR = 420
+const COLLAPSED_WIDTH = 48
+const DEFAULT_LEFT = 220
+const DEFAULT_RIGHT = 260
+
+function loadSidebarPrefs() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return null
+    const p = JSON.parse(raw)
+    return {
+      leftWidth: Math.min(MAX_SIDEBAR, Math.max(MIN_SIDEBAR, Number(p.leftWidth) || DEFAULT_LEFT)),
+      rightWidth: Math.min(MAX_SIDEBAR, Math.max(MIN_SIDEBAR, Number(p.rightWidth) || DEFAULT_RIGHT)),
+      leftCollapsed: Boolean(p.leftCollapsed),
+      rightCollapsed: Boolean(p.rightCollapsed)
+    }
+  } catch {
+    return null
+  }
+}
+
+function saveSidebarPrefs(prefs) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs))
+  } catch {}
+}
 
 function App() {
   const [leftOpen, setLeftOpen] = useState(false)
   const [rightOpen, setRightOpen] = useState(false)
+  const [leftWidth, setLeftWidth] = useState(DEFAULT_LEFT)
+  const [rightWidth, setRightWidth] = useState(DEFAULT_RIGHT)
+  const [leftCollapsed, setLeftCollapsed] = useState(false)
+  const [rightCollapsed, setRightCollapsed] = useState(false)
+  const layoutRef = useRef(null)
   const location = useLocation()
+
+  useEffect(() => {
+    const p = loadSidebarPrefs()
+    if (p) {
+      setLeftWidth(p.leftWidth)
+      setRightWidth(p.rightWidth)
+      setLeftCollapsed(p.leftCollapsed)
+      setRightCollapsed(p.rightCollapsed)
+    }
+  }, [])
+
+  useEffect(() => {
+    saveSidebarPrefs({ leftWidth, rightWidth, leftCollapsed, rightCollapsed })
+  }, [leftWidth, rightWidth, leftCollapsed, rightCollapsed])
 
   const closeOverlay = () => {
     setLeftOpen(false)
     setRightOpen(false)
   }
 
-  const isHome = location.pathname === '/'
-  const hash = location.hash.slice(1)
-  const activeSection = isHome ? (hash || 'home') : ''
+  const startResizeLeft = useCallback((e) => {
+    e.preventDefault()
+    const startX = e.clientX
+    const startW = leftWidth
+    const onMove = (e2) => {
+      const dx = e2.clientX - startX
+      const next = Math.min(MAX_SIDEBAR, Math.max(MIN_SIDEBAR, startW + dx))
+      setLeftWidth(next)
+    }
+    const onUp = () => {
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseup', onUp)
+    }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+  }, [leftWidth])
+
+  const startResizeRight = useCallback((e) => {
+    e.preventDefault()
+    const startX = e.clientX
+    const startW = rightWidth
+    const onMove = (e2) => {
+      const dx = startX - e2.clientX
+      const next = Math.min(MAX_SIDEBAR, Math.max(MIN_SIDEBAR, startW + dx))
+      setRightWidth(next)
+    }
+    const onUp = () => {
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseup', onUp)
+    }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+  }, [rightWidth])
+
+  const pathname = location.pathname
+  const activeSection = pathname === '/' ? 'home' : pathname.replace(/^\//, '') || 'home'
 
   const GRID_SPAN_COUNT = 400
+  const leftW = leftCollapsed ? COLLAPSED_WIDTH : leftWidth
+  const rightW = rightCollapsed ? COLLAPSED_WIDTH : rightWidth
 
   return (
     <div className="ref-page">
@@ -31,7 +118,14 @@ function App() {
           <span key={i} className="ref-grid-span" />
         ))}
       </section>
-      <div className="blog-layout">
+      <div
+        ref={layoutRef}
+        className="blog-layout"
+        style={{
+          '--layout-left-width': `${leftW}px`,
+          '--layout-right-width': `${rightW}px`
+        }}
+      >
       <header className="blog-layout__mobile-bar">
         <span className="blog-layout__mobile-bar-brand">曹同和</span>
         <div className="blog-layout__mobile-bar-actions">
@@ -63,9 +157,10 @@ function App() {
         aria-label="關閉選單"
       />
 
-      <aside className={`blog-layout__left ${leftOpen ? 'is-open' : ''}`}>
-        <div className="blog-layout__brand">曹同和</div>
-        <nav>
+      <aside className={`blog-layout__left ${leftOpen ? 'is-open' : ''} ${leftCollapsed ? 'blog-layout__left--collapsed' : ''}`}>
+        <div className="blog-layout__left-content">
+          <div className="blog-layout__brand">曹同和</div>
+          <nav>
           <ul className="blog-layout__nav">
             <li className="blog-layout__nav-item">
               <Link
@@ -81,7 +176,7 @@ function App() {
             </li>
             <li className="blog-layout__nav-item">
               <Link
-                to="/#posts"
+                to="/posts"
                 className={`blog-layout__nav-link ${activeSection === 'posts' ? 'blog-layout__nav-link--active' : ''}`}
                 onClick={closeOverlay}
               >
@@ -93,7 +188,7 @@ function App() {
             </li>
             <li className="blog-layout__nav-item">
               <Link
-                to="/#projects"
+                to="/projects"
                 className={`blog-layout__nav-link ${activeSection === 'projects' ? 'blog-layout__nav-link--active' : ''}`}
                 onClick={closeOverlay}
               >
@@ -105,7 +200,7 @@ function App() {
             </li>
             <li className="blog-layout__nav-item">
               <Link
-                to="/#about"
+                to="/about"
                 className={`blog-layout__nav-link ${activeSection === 'about' ? 'blog-layout__nav-link--active' : ''}`}
                 onClick={closeOverlay}
               >
@@ -117,7 +212,7 @@ function App() {
             </li>
             <li className="blog-layout__nav-item">
               <Link
-                to="/#contact"
+                to="/contact"
                 className={`blog-layout__nav-link ${activeSection === 'contact' ? 'blog-layout__nav-link--active' : ''}`}
                 onClick={closeOverlay}
               >
@@ -129,20 +224,61 @@ function App() {
             </li>
           </ul>
         </nav>
+        </div>
+        <button
+          type="button"
+          className="blog-layout__sidebar-toggle blog-layout__sidebar-toggle--left"
+          onClick={() => setLeftCollapsed((c) => !c)}
+          aria-label={leftCollapsed ? '展開左側欄' : '收合左側欄'}
+          title={leftCollapsed ? '展開左側欄' : '收合左側欄'}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {leftCollapsed ? <path d="M9 18l6-6-6-6" /> : <path d="M15 18l-6-6 6-6" />}
+          </svg>
+        </button>
+        <div
+          className="blog-layout__resize-handle blog-layout__resize-handle--left"
+          onMouseDown={startResizeLeft}
+          role="separator"
+          aria-label="拖曳調整左側欄寬度"
+        />
       </aside>
 
       <main className="blog-layout__main">
         <div className="blog-layout__main-inner">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/posts" element={<PostsPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
             <Route path="/post/:slug" element={<PostPage />} />
           </Routes>
         </div>
       </main>
 
-      <aside className={`blog-layout__right ${rightOpen ? 'is-open' : ''}`}>
-        <RecentPosts />
-        <AboutCard />
+      <aside className={`blog-layout__right ${rightOpen ? 'is-open' : ''} ${rightCollapsed ? 'blog-layout__right--collapsed' : ''}`}>
+        <div
+          className="blog-layout__resize-handle blog-layout__resize-handle--right"
+          onMouseDown={startResizeRight}
+          role="separator"
+          aria-label="拖曳調整右側欄寬度"
+        />
+        <div className="blog-layout__right-content">
+          <RecentPosts />
+          <AboutCard />
+        </div>
+        <button
+          type="button"
+          className="blog-layout__sidebar-toggle blog-layout__sidebar-toggle--right"
+          onClick={() => setRightCollapsed((c) => !c)}
+          aria-label={rightCollapsed ? '展開右側欄' : '收合右側欄'}
+          title={rightCollapsed ? '展開右側欄' : '收合右側欄'}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {rightCollapsed ? <path d="M15 18l-6-6 6-6" /> : <path d="M9 18l6-6-6-6" />}
+          </svg>
+        </button>
       </aside>
       </div>
     </div>
