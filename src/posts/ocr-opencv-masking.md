@@ -2,7 +2,7 @@
 title: "影像辨識整合：OCR 與 OpenCV 個資遮罩"
 date: "2024-12-10"
 category: "技術"
-tags: ["Python", "OCR", "OpenCV", "影像處理", "個資保護"]
+tags: ["Python", "OCR", "OpenCV", "影像處理", "個資保護", "前處理", "角度校正"]
 excerpt: "串接 OCR 文字辨識與 OpenCV 影像處理，建立個資保護處理流程，並以實驗設計權重建立圖片方向判別機制（2025.06 - 2025.12）。"
 ---
 

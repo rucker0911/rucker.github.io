@@ -2,7 +2,7 @@
 title: "道路安全整合：涵洞 CMS 與 AI CCTV、行人安全保護"
 date: "2025-01-20"
 category: "專案"
-tags: ["Python", "AI", "CCTV", "CMS", "事件驅動", "離線部署"]
+tags: ["Python", "AI", "CCTV", "CMS", "事件驅動", "離線部署", "道路安全", "視覺辨識", "IPC"]
 excerpt: "將 AI 視覺辨識事件轉換為 CMS 可變資訊標誌的顯示指令，建立即時道路安全警示機制；含涵洞 CMS 整合 AI CCTV 與行人安全保護專案。"
 ---
 

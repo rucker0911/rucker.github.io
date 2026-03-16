@@ -2,7 +2,7 @@
 title: "動態號控整合：敬老號誌觸動與潭雅神綠園道優先號誌"
 date: "2025-02-15"
 category: "專案"
-tags: ["Python", "RS485", "UDP", "Socket IO", "TCP", "ZMQ", "Asyncio", "影像辨識"]
+tags: ["Python", "RS485", "UDP", "Socket IO", "TCP", "ZMQ", "Asyncio", "影像辨識", "動態號控", "智慧交通"]
 excerpt: "整合路側讀卡機、號誌控制器與 IPC（敬老號誌觸動）；以及 AI 影像辨識與號誌控制（潭雅神綠園道優先號誌）的實作經驗。"
 ---
 

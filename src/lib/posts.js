@@ -43,14 +43,17 @@ function _parsePost(path, raw) {
   }
   body = _stripFrontmatterFromBody(body)
   const slug = _slugFromPath(path)
-  const title = data.title ?? _slugToTitle(slug)
+  const parsedTags = Array.isArray(data.tags) && data.tags.length > 0
+    ? data.tags
+    : _extractTagsFromRaw(content)
+  const title = data.title ? data.title : _extractTitleFromRaw(content) || _slugToTitle(slug)
   const date = data.date != null ? String(data.date) : ''
   return {
     slug,
     title: title && String(title).trim() ? title : _slugToTitle(slug),
     date,
     category: data.category ?? '',
-    tags: Array.isArray(data.tags) ? data.tags : (data.tags ? [data.tags] : []),
+    tags: parsedTags,
     excerpt: data.excerpt ?? '',
     body
   }
@@ -64,6 +67,22 @@ function _stripFrontmatterFromBody(body) {
     if (secondDash !== -1) return trimmed.slice(secondDash + 4).trim()
   }
   return body
+}
+
+function _extractTagsFromRaw(content) {
+  if (!content || typeof content !== 'string') return []
+  const match = content.match(/tags:\s*\[([^\]]*)\]/)
+  if (!match) return []
+  return match[1]
+    .split(',')
+    .map((s) => s.replace(/^["'\s]+|["'\s]+$/g, '').trim())
+    .filter(Boolean)
+}
+
+function _extractTitleFromRaw(content) {
+  if (!content || typeof content !== 'string') return ''
+  const match = content.match(/title:\s*["']([^"']*)["']/)
+  return match ? match[1].trim() : ''
 }
 
 export function getAllPosts() {

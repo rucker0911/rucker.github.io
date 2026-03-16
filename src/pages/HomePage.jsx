@@ -7,6 +7,9 @@ const TAB_ALL = '全部'
 const TAB_CATEGORY = '分類'
 const TAB_TAG = '標籤'
 
+const VIEW_LIST = 'list'
+const VIEW_GRID = 'grid'
+
 export default function HomePage() {
   const allPosts = useMemo(() => getAllPosts(), [])
   const categories = useMemo(() => getCategories(allPosts), [allPosts])
@@ -16,6 +19,7 @@ export default function HomePage() {
   const [tab, setTab] = useState(TAB_ALL)
   const [categoryFilter, setCategoryFilter] = useState('')
   const [tagFilter, setTagFilter] = useState('')
+  const [viewMode, setViewMode] = useState(VIEW_LIST)
   const location = useLocation()
 
   useEffect(() => {
@@ -61,33 +65,66 @@ export default function HomePage() {
           <input
             type="search"
             className="home__search"
-            placeholder="搜尋文章…"
+            placeholder="搜尋文章、標籤…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             aria-label="搜尋文章"
           />
-          <div className="home__tabs">
-            <button
-              type="button"
-              className={`home__tab ${tab === TAB_ALL ? 'is-active' : ''}`}
-              onClick={() => setTab(TAB_ALL)}
-            >
-              全部
-            </button>
-            <button
-              type="button"
-              className={`home__tab ${tab === TAB_CATEGORY ? 'is-active' : ''}`}
-              onClick={() => setTab(TAB_CATEGORY)}
-            >
-              分類
-            </button>
-            <button
-              type="button"
-              className={`home__tab ${tab === TAB_TAG ? 'is-active' : ''}`}
-              onClick={() => setTab(TAB_TAG)}
-            >
-              標籤
-            </button>
+          <div className="home__toolbar-row">
+            <div className="home__tabs">
+              <button
+                type="button"
+                className={`home__tab ${tab === TAB_ALL ? 'is-active' : ''}`}
+                onClick={() => setTab(TAB_ALL)}
+              >
+                全部
+              </button>
+              <button
+                type="button"
+                className={`home__tab ${tab === TAB_CATEGORY ? 'is-active' : ''}`}
+                onClick={() => setTab(TAB_CATEGORY)}
+              >
+                分類
+              </button>
+              <button
+                type="button"
+                className={`home__tab ${tab === TAB_TAG ? 'is-active' : ''}`}
+                onClick={() => setTab(TAB_TAG)}
+              >
+                標籤
+              </button>
+            </div>
+            <div className="home__view-mode" aria-label="文章檢視方式">
+              <button
+                type="button"
+                className={`home__view-btn ${viewMode === VIEW_LIST ? 'is-active' : ''}`}
+                onClick={() => setViewMode(VIEW_LIST)}
+                title="列表"
+                aria-label="列表檢視"
+                aria-pressed={viewMode === VIEW_LIST}
+              >
+                <svg className="home__view-icon" viewBox="0 0 24 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden>
+                  <rect x="1" y="1" width="22" height="3" rx="0.5" />
+                  <rect x="1" y="6" width="22" height="3" rx="0.5" />
+                  <rect x="1" y="11" width="22" height="3" rx="0.5" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className={`home__view-btn ${viewMode === VIEW_GRID ? 'is-active' : ''}`}
+                onClick={() => setViewMode(VIEW_GRID)}
+                title="網格併排"
+                aria-label="網格檢視"
+                aria-pressed={viewMode === VIEW_GRID}
+              >
+                <svg className="home__view-icon" viewBox="0 0 24 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden>
+                  <rect x="1" y="1" width="10" height="6" rx="0.5" />
+                  <rect x="13" y="1" width="10" height="6" rx="0.5" />
+                  <rect x="1" y="9" width="10" height="6" rx="0.5" />
+                  <rect x="13" y="9" width="10" height="6" rx="0.5" />
+                </svg>
+              </button>
+            </div>
           </div>
           {tab === TAB_CATEGORY && categories.length > 0 && (
             <div className="home__filters">
@@ -133,7 +170,7 @@ export default function HomePage() {
           )}
         </div>
 
-        <ul className="home__list">
+        <ul className={`home__list ${viewMode === VIEW_GRID ? 'home__list--grid' : ''}`}>
           {filteredPosts.map((post) => (
             <li key={post.slug} className="home__list-item">
               <Link to={`/post/${post.slug}`} className="home__list-link">
@@ -141,15 +178,15 @@ export default function HomePage() {
                 <span className="home__list-meta">
                   {post.date} {post.category && `· ${post.category}`}
                 </span>
-                {post.excerpt && (
-                  <p className="home__list-excerpt">{post.excerpt}</p>
-                )}
                 {post.tags.length > 0 && (
                   <span className="home__list-tags">
                     {post.tags.map((t) => (
                       <span key={t} className="home__list-tag">{t}</span>
                     ))}
                   </span>
+                )}
+                {post.excerpt && (
+                  <p className="home__list-excerpt">{post.excerpt}</p>
                 )}
               </Link>
             </li>

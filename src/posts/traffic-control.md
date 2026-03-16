@@ -2,7 +2,7 @@
 title: "異質通訊協定整合實務：UDP、MQTT、Socket IO"
 date: "2025-03-01"
 category: "技術"
-tags: ["Python", "IoT", "UDP", "MQTT", "ZMQ", "PostgreSQL", "Asyncio"]
+tags: ["Python", "IoT", "UDP", "MQTT", "ZMQ", "PostgreSQL", "Asyncio", "HTTP", "Socket IO", "智慧交通", "號誌控制"]
 excerpt: "在新竹市號誌控制系統（2024.08 - 2026.03）中，整合 450 台以上路側設備的跨協定架構設計與實作經驗。"
 ---
 
