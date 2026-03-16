@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { getAllPosts, getCategories, getTags } from '../lib/posts'
 import './HomePage.css'
 
@@ -16,14 +16,15 @@ export default function HomePage() {
   const [tab, setTab] = useState(TAB_ALL)
   const [categoryFilter, setCategoryFilter] = useState('')
   const [tagFilter, setTagFilter] = useState('')
+  const location = useLocation()
 
   useEffect(() => {
-    const hash = window.location.hash.slice(1)
+    const hash = (location.hash || window.location.hash).slice(1)
     if (hash) {
       const el = document.getElementById(hash)
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
-  }, [])
+  }, [location.hash])
 
   const filteredPosts = useMemo(() => {
     let list = allPosts

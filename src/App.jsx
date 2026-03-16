@@ -19,6 +19,8 @@ function App() {
   }
 
   const isHome = location.pathname === '/'
+  const hash = location.hash.slice(1)
+  const activeSection = isHome ? (hash || 'home') : ''
 
   const GRID_SPAN_COUNT = 400
 
@@ -68,7 +70,7 @@ function App() {
             <li className="blog-layout__nav-item">
               <Link
                 to="/"
-                className={`blog-layout__nav-link ${isHome ? 'blog-layout__nav-link--active' : ''}`}
+                className={`blog-layout__nav-link ${activeSection === 'home' ? 'blog-layout__nav-link--active' : ''}`}
                 onClick={closeOverlay}
               >
                 首頁
@@ -76,27 +78,39 @@ function App() {
             </li>
             <li className="blog-layout__nav-item">
               <Link
-                to="/"
-                className="blog-layout__nav-link"
+                to="/#posts"
+                className={`blog-layout__nav-link ${activeSection === 'posts' ? 'blog-layout__nav-link--active' : ''}`}
                 onClick={closeOverlay}
               >
                 文章
               </Link>
             </li>
             <li className="blog-layout__nav-item">
-              <a href={isHome ? '#projects' : '/#projects'} className="blog-layout__nav-link" onClick={closeOverlay}>
+              <Link
+                to="/#projects"
+                className={`blog-layout__nav-link ${activeSection === 'projects' ? 'blog-layout__nav-link--active' : ''}`}
+                onClick={closeOverlay}
+              >
                 專案
-              </a>
+              </Link>
             </li>
             <li className="blog-layout__nav-item">
-              <a href={isHome ? '#about' : '/#about'} className="blog-layout__nav-link" onClick={closeOverlay}>
+              <Link
+                to="/#about"
+                className={`blog-layout__nav-link ${activeSection === 'about' ? 'blog-layout__nav-link--active' : ''}`}
+                onClick={closeOverlay}
+              >
                 關於
-              </a>
+              </Link>
             </li>
             <li className="blog-layout__nav-item">
-              <a href={isHome ? '#contact' : '/#contact'} className="blog-layout__nav-link" onClick={closeOverlay}>
+              <Link
+                to="/#contact"
+                className={`blog-layout__nav-link ${activeSection === 'contact' ? 'blog-layout__nav-link--active' : ''}`}
+                onClick={closeOverlay}
+              >
                 聯絡
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
